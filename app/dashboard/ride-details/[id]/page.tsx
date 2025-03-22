@@ -82,9 +82,7 @@ export default function RideDetails({ params }: { params: { id: string } }) {
               <button className="bg-white dark:bg-gray-800 text-[#ffd342] text-sm font-medium py-2 px-6 rounded-full border border-[#ffd342] hover:bg-[#ffd342] hover:text-black dark:hover:text-black transition-colors shadow-sm">
                 Get Receipt
               </button>
-              <button className="bg-[#ffd342] text-black text-sm font-medium py-2 px-6 rounded-full hover:bg-[#e6be2e] transition-colors shadow-sm">
-                Rebook
-              </button>
+              
             </div>
           </CardContent>
         </Card>

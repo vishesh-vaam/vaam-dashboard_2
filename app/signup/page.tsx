@@ -131,7 +131,6 @@ export default function SignUp() {
 	};
 
 	const handleGoogleSignUp = async () => {
-		// Store form data in localStorage to retrieve after OAuth redirect
 		localStorage.setItem("signupFormData", JSON.stringify(formData));
 		localStorage.setItem("insuranceFileName", insuranceFile?.name || "");
 		const { error } = await supabase.auth.signInWithOAuth({
@@ -142,25 +141,31 @@ export default function SignUp() {
 	};
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-100">
-			<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
-				<h1 className="text-2xl font-bold mb-6 text-center">Driver Sign Up</h1>
+		<div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black px-4">
+			<div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md w-full max-w-lg">
+				<h1 className="text-2xl font-bold mb-6 text-center text-black dark:text-white">
+					Driver Sign Up
+				</h1>
 
 				{/* Auth Method Selection */}
 				<div className="flex justify-center space-x-4 mb-4">
 					<button
 						onClick={() => setAuthMethod("email")}
 						className={`px-4 py-2 rounded-lg ${
-							authMethod === "email" ? "bg-blue-500 text-white" : "bg-gray-200"
-						}`}
+							authMethod === "email"
+								? "bg-[#ffd342] text-black"
+								: "bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
+						} hover:bg-[#ffdc60] dark:hover:bg-gray-600`}
 					>
 						Email & Password
 					</button>
 					<button
 						onClick={() => setAuthMethod("google")}
 						className={`px-4 py-2 rounded-lg ${
-							authMethod === "google" ? "bg-blue-500 text-white" : "bg-gray-200"
-						}`}
+							authMethod === "google"
+								? "bg-[#ffd342] text-black"
+								: "bg-gray-200 dark:bg-gray-700 text-black dark:text-white"
+						} hover:bg-[#ffdc60] dark:hover:bg-gray-600`}
 					>
 						Google
 					</button>
@@ -181,7 +186,7 @@ export default function SignUp() {
 							value={formData.firstName}
 							onChange={handleInputChange}
 							placeholder="First Name"
-							className="w-1/3 px-4 py-2 border rounded-lg"
+							className="w-1/3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 							required
 						/>
 						<input
@@ -190,7 +195,7 @@ export default function SignUp() {
 							value={formData.middleName}
 							onChange={handleInputChange}
 							placeholder="Middle Name"
-							className="w-1/3 px-4 py-2 border rounded-lg"
+							className="w-1/3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						/>
 						<input
 							type="text"
@@ -198,7 +203,7 @@ export default function SignUp() {
 							value={formData.lastName}
 							onChange={handleInputChange}
 							placeholder="Last Name"
-							className="w-1/3 px-4 py-2 border rounded-lg"
+							className="w-1/3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 							required
 						/>
 					</div>
@@ -210,7 +215,7 @@ export default function SignUp() {
 								value={formData.email}
 								onChange={handleInputChange}
 								placeholder="Email"
-								className="w-full px-4 py-2 border rounded-lg"
+								className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 								required
 							/>
 							<input
@@ -219,7 +224,7 @@ export default function SignUp() {
 								value={formData.password}
 								onChange={handleInputChange}
 								placeholder="Password"
-								className="w-full px-4 py-2 border rounded-lg"
+								className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 								required
 							/>
 							<input
@@ -228,7 +233,7 @@ export default function SignUp() {
 								value={formData.confirmPassword}
 								onChange={handleInputChange}
 								placeholder="Confirm Password"
-								className="w-full px-4 py-2 border rounded-lg"
+								className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 								required
 							/>
 						</>
@@ -239,7 +244,7 @@ export default function SignUp() {
 						value={formData.phoneNumber}
 						onChange={handleInputChange}
 						placeholder="Phone Number"
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						required
 					/>
 					<input
@@ -248,14 +253,14 @@ export default function SignUp() {
 						value={formData.address}
 						onChange={handleInputChange}
 						placeholder="Address"
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						required
 					/>
 					<select
 						name="selectedBrand"
 						value={formData.selectedBrand}
 						onChange={handleInputChange}
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						required
 					>
 						<option value="">Select Car Brand</option>
@@ -269,7 +274,7 @@ export default function SignUp() {
 						name="selectedModel"
 						value={formData.selectedModel}
 						onChange={handleInputChange}
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						required
 					>
 						<option value="">Select Model</option>
@@ -286,7 +291,7 @@ export default function SignUp() {
 						value={formData.carNumber}
 						onChange={handleInputChange}
 						placeholder="Car Registration Number"
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						required
 					/>
 					<input
@@ -295,18 +300,18 @@ export default function SignUp() {
 						value={formData.driversLicenseNumber}
 						onChange={handleInputChange}
 						placeholder="Driver's License Number"
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
 						required
 					/>
 					<input
 						type="file"
 						onChange={handleFileChange}
-						className="w-full px-4 py-2 border rounded-lg"
+						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-200 dark:file:bg-gray-700 file:text-black dark:file:text-white"
 					/>
 					<button
 						type="submit"
 						disabled={loading}
-						className="w-full bg-blue-500 text-white py-2 rounded-lg"
+						className="w-full py-2 bg-[#ffd342] text-black rounded-lg hover:bg-[#ffdc60] disabled:opacity-50 dark:bg-[#ffd342] dark:text-black dark:hover:bg-[#ffdc60]"
 					>
 						{loading
 							? "Processing..."

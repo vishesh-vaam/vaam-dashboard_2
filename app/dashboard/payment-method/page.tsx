@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { CreditCard, Wallet, Plus, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function PaymentMethodPage() {
   const router = useRouter();
@@ -59,12 +60,14 @@ export default function PaymentMethodPage() {
             ))}
           </div>
 
+          <Link href={'/add-card'}>
           <button 
-            onClick={() => router.push('dashboard/add-card')}
+            // onClick={() => router.push('dashboard/add-card')}
             className="mt-6 text-primary font-medium flex items-center gap-2 hover:text-[#e6bd3b] transition-colors"
           >
             <CreditCard size={18} /> Add New Card
           </button>
+          </Link>
         </div>
 
         <button className="w-full bg-[#ffd342] text-black py-4 rounded-xl font-semibold text-lg hover:bg-[#e6bd3b] transition-colors">
