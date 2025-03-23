@@ -29,7 +29,7 @@ export default function ResetPassword() {
       });
       if (error) throw error;
       setSuccess(true);
-      setTimeout(() => router.push("/signin"), 2000); // Redirect after 2 seconds
+      setTimeout(() => router.push("/signin"), 2000); 
     } catch (error) {
       setError(
         error instanceof Error
