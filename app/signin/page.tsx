@@ -1,7 +1,7 @@
 // app/signin/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSupabase } from "@/lib/supabase-client";
@@ -92,6 +92,18 @@ export default function SignIn() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+		const checkSession = async () => {
+			const { data, error } = await supabase.auth.getSession();
+
+			if (data?.session) {
+				router.push("/dashboard");
+			}
+		};
+
+		checkSession();
+	}, [router, supabase.auth]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black px-4">

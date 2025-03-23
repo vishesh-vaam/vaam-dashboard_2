@@ -23,16 +23,25 @@ export default function DashboeardLayout({
 			const { data, error } = await supabase.auth.getSession();
 
 			if (!data?.session) {
-				router.push("/signin"); // Redirect if no session
+				router.push("/signin");
+				return;
+			}
 
-				console.log("hii")
-			} else {
-				console.log("Session:", data.session);
+			const userId = data.session.user.id;
+			const { data: profile, error: profileError } = await supabase
+				.from("profiles")
+				.select("id")
+				.eq("id", userId)
+				.single();
+
+			if (!profile) {
+				router.push("/form");
 			}
 		};
 
 		checkSession();
-	}, [router]);
+	}, []);
+
 
 
 	return (

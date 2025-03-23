@@ -1,4 +1,3 @@
-// app/signup/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -10,66 +9,22 @@ export default function SignUp() {
 	const router = useRouter();
 	const [authMethod, setAuthMethod] = useState<"email" | "google">("email");
 	const [formData, setFormData] = useState({
-		firstName: "",
-		middleName: "",
-		lastName: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
-		phoneNumber: "",
-		address: "",
-		selectedBrand: "",
-		selectedModel: "",
-		carNumber: "",
-		driversLicenseNumber: "",
 	});
-	const [insuranceFile, setInsuranceFile] = useState<File | null>(null);
 	const [loading, setLoading] = useState(false);
 
-	const carBrands: Record<string, string[]> = {
-		Toyota: ["Corolla", "Camry", "RAV4"],
-		Ford: ["Focus", "Mustang", "Explorer"],
-		Honda: ["Civic", "Accord", "CR-V"],
-		BMW: ["X5", "M3", "320i"],
-		Mercedes: ["C-Class", "E-Class", "GLA"],
-	};
-
-	const handleInputChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-	) => {
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files) {
-			setInsuranceFile(e.target.files[0]);
-		}
-	};
-
 	const validateForm = () => {
-		const requiredFields = [
-			"firstName",
-			"lastName",
-			"phoneNumber",
-			"address",
-			"selectedBrand",
-			"selectedModel",
-			"carNumber",
-			"driversLicenseNumber",
-		];
-		if (authMethod === "email") {
-			requiredFields.push("email", "password", "confirmPassword");
+		if (!formData.email || !formData.password || !formData.confirmPassword) {
+			alert("Please fill out all fields.");
+			return false;
 		}
-		for (const field of requiredFields) {
-			if (!formData[field as keyof typeof formData]) {
-				alert(`Please fill out the ${field} field.`);
-				return false;
-			}
-		}
-		if (
-			authMethod === "email" &&
-			formData.password !== formData.confirmPassword
-		) {
+		if (formData.password !== formData.confirmPassword) {
 			alert("Passwords do not match.");
 			return false;
 		}
@@ -80,49 +35,13 @@ export default function SignUp() {
 		if (!validateForm()) return;
 		setLoading(true);
 		try {
-			const { data, error } = await supabase.auth.signUp({
+			const { error } = await supabase.auth.signUp({
 				email: formData.email,
 				password: formData.password,
 			});
 			if (error) throw error;
-			const user = data.user;
-			if (!user) throw new Error("User not created");
-
-			// Upload insurance file if provided
-			let insuranceUrl = "";
-			if (insuranceFile) {
-				const filePath = `insurance/${user.id}/${insuranceFile.name}`;
-				const { error: uploadError } = await supabase.storage
-					.from("insurance")
-					.upload(filePath, insuranceFile);
-				if (uploadError) throw uploadError;
-				const { data: urlData } = supabase.storage
-					.from("insurance")
-					.getPublicUrl(filePath);
-				insuranceUrl = urlData.publicUrl;
-			}
-
-			// Insert profile data into profiles table
-			const { error: profileError } = await supabase.from("profiles").insert({
-				id: user.id,
-				first_name: formData.firstName,
-				middle_name: formData.middleName,
-				last_name: formData.lastName,
-				email: formData.email,
-				phone_number: formData.phoneNumber,
-				address: formData.address,
-				car_brand: formData.selectedBrand,
-				car_model: formData.selectedModel,
-				car_registration_number: formData.carNumber,
-				drivers_license_number: formData.driversLicenseNumber,
-				insurance_file_url: insuranceUrl,
-			});
-			if (profileError) throw profileError;
-
-			alert(
-				"Sign-up successful! Please check your email for confirmation if required."
-			);
-			router.push("/dashboard");
+			alert("Sign-up successful! Check your email for confirmation.");
+			router.push("/form");
 		} catch (error) {
 			alert("Sign-up failed: " + (error as Error).message);
 		} finally {
@@ -131,8 +50,6 @@ export default function SignUp() {
 	};
 
 	const handleGoogleSignUp = async () => {
-		localStorage.setItem("signupFormData", JSON.stringify(formData));
-		localStorage.setItem("insuranceFileName", insuranceFile?.name || "");
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider: "google",
 			options: { redirectTo: `${window.location.origin}/auth/callback` },
@@ -147,7 +64,6 @@ export default function SignUp() {
 					Driver Sign Up
 				</h1>
 
-				{/* Auth Method Selection */}
 				<div className="flex justify-center space-x-4 mb-4">
 					<button
 						onClick={() => setAuthMethod("email")}
@@ -171,155 +87,57 @@ export default function SignUp() {
 					</button>
 				</div>
 
-				{/* Sign-Up Form */}
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						authMethod === "email" ? handleEmailSignUp() : handleGoogleSignUp();
-					}}
-					className="space-y-4"
-				>
-					<div className="flex space-x-2">
+				{authMethod === "email" ? (
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleEmailSignUp();
+						}}
+						className="space-y-4"
+					>
 						<input
-							type="text"
-							name="firstName"
-							value={formData.firstName}
+							type="email"
+							name="email"
+							value={formData.email}
 							onChange={handleInputChange}
-							placeholder="First Name"
-							className="w-1/3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+							placeholder="Email"
+							className="w-full px-4 py-2 border rounded-lg"
 							required
 						/>
 						<input
-							type="text"
-							name="middleName"
-							value={formData.middleName}
+							type="password"
+							name="password"
+							value={formData.password}
 							onChange={handleInputChange}
-							placeholder="Middle Name"
-							className="w-1/3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						/>
-						<input
-							type="text"
-							name="lastName"
-							value={formData.lastName}
-							onChange={handleInputChange}
-							placeholder="Last Name"
-							className="w-1/3 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+							placeholder="Password"
+							className="w-full px-4 py-2 border rounded-lg"
 							required
 						/>
-					</div>
-					{authMethod === "email" && (
-						<>
-							<input
-								type="email"
-								name="email"
-								value={formData.email}
-								onChange={handleInputChange}
-								placeholder="Email"
-								className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-								required
-							/>
-							<input
-								type="password"
-								name="password"
-								value={formData.password}
-								onChange={handleInputChange}
-								placeholder="Password"
-								className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-								required
-							/>
-							<input
-								type="password"
-								name="confirmPassword"
-								value={formData.confirmPassword}
-								onChange={handleInputChange}
-								placeholder="Confirm Password"
-								className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-								required
-							/>
-						</>
-					)}
-					<input
-						type="text"
-						name="phoneNumber"
-						value={formData.phoneNumber}
-						onChange={handleInputChange}
-						placeholder="Phone Number"
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						required
-					/>
-					<input
-						type="text"
-						name="address"
-						value={formData.address}
-						onChange={handleInputChange}
-						placeholder="Address"
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						required
-					/>
-					<select
-						name="selectedBrand"
-						value={formData.selectedBrand}
-						onChange={handleInputChange}
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						required
-					>
-						<option value="">Select Car Brand</option>
-						{Object.keys(carBrands).map((brand) => (
-							<option key={brand} value={brand}>
-								{brand}
-							</option>
-						))}
-					</select>
-					<select
-						name="selectedModel"
-						value={formData.selectedModel}
-						onChange={handleInputChange}
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						required
-					>
-						<option value="">Select Model</option>
-						{formData.selectedBrand &&
-							carBrands[formData.selectedBrand].map((model) => (
-								<option key={model} value={model}>
-									{model}
-								</option>
-							))}
-					</select>
-					<input
-						type="text"
-						name="carNumber"
-						value={formData.carNumber}
-						onChange={handleInputChange}
-						placeholder="Car Registration Number"
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						required
-					/>
-					<input
-						type="text"
-						name="driversLicenseNumber"
-						value={formData.driversLicenseNumber}
-						onChange={handleInputChange}
-						placeholder="Driver's License Number"
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-						required
-					/>
-					<input
-						type="file"
-						onChange={handleFileChange}
-						className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-200 dark:file:bg-gray-700 file:text-black dark:file:text-white"
-					/>
+						<input
+							type="password"
+							name="confirmPassword"
+							value={formData.confirmPassword}
+							onChange={handleInputChange}
+							placeholder="Confirm Password"
+							className="w-full px-4 py-2 border rounded-lg"
+							required
+						/>
+						<button
+							type="submit"
+							disabled={loading}
+							className="w-full py-2 bg-[#ffd342] text-black rounded-lg hover:bg-[#ffdc60] disabled:opacity-50"
+						>
+							{loading ? "Processing..." : "Sign Up with Email"}
+						</button>
+					</form>
+				) : (
 					<button
-						type="submit"
-						disabled={loading}
-						className="w-full py-2 bg-[#ffd342] text-black rounded-lg hover:bg-[#ffdc60] disabled:opacity-50 dark:bg-[#ffd342] dark:text-black dark:hover:bg-[#ffdc60]"
+						onClick={handleGoogleSignUp}
+						className="w-full py-2 bg-[#ffd342] text-black rounded-lg hover:bg-[#ffdc60]"
 					>
-						{loading
-							? "Processing..."
-							: authMethod === "email"
-							? "Sign Up with Email"
-							: "Sign Up with Google"}
+						Sign Up with Google
 					</button>
-				</form>
+				)}
 			</div>
 		</div>
 	);
