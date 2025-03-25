@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSupabase } from "@/lib/supabase-client";
+import { FcGoogle } from "react-icons/fc";
+import { MdEmail, MdLock } from "react-icons/md";
 
 export default function SignIn() {
   const { supabase } = useSupabase();
@@ -94,24 +96,25 @@ export default function SignIn() {
   };
 
   useEffect(() => {
-		const checkSession = async () => {
-			const { data, error } = await supabase.auth.getSession();
+    const checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
 
-			if (data?.session) {
-				router.push("/dashboard");
-			}
-		};
+      if (data?.session) {
+        router.push("/dashboard");
+      }
+    };
 
-		checkSession();
-	}, [router, supabase.auth]);
+    checkSession();
+  }, [router, supabase.auth]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black px-4">
-      <div className="max-w-md w-full space-y-6 p-8 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-        <h2 className="text-center text-3xl font-extrabold text-black dark:text-white">
+      <div className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg w-full max-w-md ">
+        <h2 className="text-3xl font-bold mb-8 text-center text-black dark:text-white">
           Sign In
         </h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
+
+        <form onSubmit={handleSignIn} className="space-y-6">
           {error && (
             <div className="bg-red-100 dark:bg-red-900 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded-md">
               {error}
@@ -122,57 +125,65 @@ export default function SignIn() {
               {resetMessage}
             </div>
           )}
-          <div className="space-y-4">
-            <input
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-              placeholder="Email address"
-            />
-            <div className="space-y-2">
+          <div className="space-y-6">
+            <div className="relative">
+              <MdEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[#ffd342] transition-all"
+              />
+            </div>
+            <div className="relative">
+              <MdLock className="absolute left-3 top-1/3 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="password"
                 autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                 placeholder="Password"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-[#ffd342] transition-all"
               />
+              <Link href={"/reset-password"}>
               <button
                 type="button"
-                onClick={handleForgotPassword}
-                className="text-sm text-[#ffd342] hover:underline focus:outline-none"
+                className="text-sm text-[#ffd342] hover:underline focus:outline-none mt-2 block"
                 disabled={isLoading}
               >
                 Forgot Password?
               </button>
+              </Link>
             </div>
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2 bg-[#ffd342] text-black rounded-md hover:bg-[#ffdc60] disabled:opacity-50 dark:bg-[#ffd342] dark:text-black dark:hover:bg-[#ffdc60]"
+            className="w-full py-3 bg-[#ffd342] text-black font-semibold rounded-lg hover:bg-[#ffdc60] disabled:opacity-50 transition-all"
           >
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
         <div className="flex items-center justify-center py-4">
           <hr className="w-full border-gray-300 dark:border-gray-700" />
           <span className="px-2 text-gray-500 dark:text-gray-400">or</span>
           <hr className="w-full border-gray-300 dark:border-gray-700" />
         </div>
+
         <button
           onClick={handleGoogleSignIn}
-          className="w-full py-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-md hover:bg-gray-300 dark:hover:bg-gray-600"
+          className="w-full py-3 bg-[#ffd342] text-black font-semibold rounded-lg hover:bg-[#ffdc60] flex items-center justify-center transition-all"
           disabled={isLoading}
         >
-          Sign in with Google
+          <FcGoogle className="mr-2" /> Sign In with Google
         </button>
-        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+
+        <p className="text-center text-sm text-gray-600 dark:text-gray-300 mt-4">
           New here?{" "}
           <Link href="/signup" className="text-[#ffd342] hover:underline">
             Create an account
