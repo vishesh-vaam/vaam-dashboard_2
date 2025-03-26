@@ -2,7 +2,7 @@
 
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
-import { Header } from "@/components/Header";
+import { Header } from "@/components/header";
 import { UserInfo } from "@/components/user-info";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
