@@ -1,81 +1,71 @@
-"use client"; 
+"use client";
 
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
-import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/Header";
 import { UserInfo } from "@/components/user-info";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSupabase } from "@/lib/supabase-client";
 
-
-export default function DashboeardLayout({
-	children,
+export default function DashboardLayout({
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	const { supabase } = useSupabase();
-	const router = useRouter();
+  const { supabase } = useSupabase();
+  const router = useRouter();
 
-	useEffect(() => {
-		const checkSession = async () => {
-			const { data, error } = await supabase.auth.getSession();
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
 
-			if (!data?.session) {
-				router.push("/signin");
-				return;
-			}
+      if (!data?.session) {
+        router.push("/signin");
+        return;
+      }
 
-			const userId = data.session.user.id;
-			const { data: profile, error: profileError } = await supabase
-				.from("profiles")
-				.select("id")
-				.eq("id", userId)
-				.single();
+      const userId = data.session.user.id;
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", userId)
+        .single();
 
-			if (!profile) {
-				router.push("/form");
-			}
-		};
+      if (!profile) {
+        router.push("/form");
+      }
+    };
 
-		checkSession();
-	}, []);
+    checkSession();
+  }, []);
 
-
-
-	return (
-		<html lang="en">
-				<SessionContextProvider supabaseClient={supabase}>
-					
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="light"
-						enableSystem={false}
-						storageKey="driver-theme"
-					>
-						<div className="h-screen relative">
-							{/* Sidebar */}
-							<div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 bg-gray-900">
-								<div className="flex-1 flex flex-col min-h-0">
-									<div className="flex-1 flex flex-col overflow-y-auto">
-										<Sidebar />
-									</div>
-								</div>
-							</div>
-							{/* Main content area */}
-							<div className="md:pl-72">
-								<div className="flex min-h-screen">
-									<div className="flex-1 p-8">{children}</div>
-									{/* User Info Sidebar */}
-									<div className="hidden xl:block w-80 p-8 border-l">
-										<UserInfo />
-									</div>
-								</div>
-							</div>
-						</div>
-					</ThemeProvider>
-				</SessionContextProvider>
-		</html>
-	);
+  return (
+    <html lang="en">
+      <SessionContextProvider supabaseClient={supabase}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          storageKey="driver-theme"
+        >
+          <div className="min-h-screen flex flex-col">
+            {/* Header */}
+            <Header />
+            {/* Main content area */}
+            <div className="flex-1">
+              <div className="flex min-h-[calc(100vh-4rem)]">
+                <div className="flex-1 p-8 mt-16">{children}</div>
+                {/* User Info Sidebar */}
+                <div className="hidden xl:block w-80 p-8 mt-16 border-l">
+                  <UserInfo />
+                </div>
+              </div>
+            </div>
+          </div>
+        </ThemeProvider>
+      </SessionContextProvider>
+    </html>
+  );
 }
