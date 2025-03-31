@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, User, Wallet, CreditCard, Menu } from "lucide-react";
+import { LayoutDashboard, User, Wallet, CreditCard, Menu, Mail, Trophy, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useState } from "react";
+import { useSupabase } from "@/lib/supabase-client";
 
 const routes = [
   {
@@ -28,16 +29,41 @@ const routes = [
     color: "text-pink-700",
   },
   {
+    label: "Milestones",
+    icon: Trophy,
+    href: "/dashboard/milestone",
+    color: "text-orange-500",
+  },
+  {
     label: "Subscription",
     icon: CreditCard,
     href: "/dashboard/subscription",
     color: "text-orange-700",
   },
+  {
+    label: "Contact",
+    icon: Mail,
+    href: "/dashboard/contact",
+    color: "text-blue-400",
+  },
 ];
 
 export function Header() {
   const pathname = usePathname();
+  const { supabase } = useSupabase();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      router.push("/signin");
+      router.refresh(); // Force a refresh to ensure clean state
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-black text-white z-50 border-b border-gray-800">
@@ -79,6 +105,13 @@ export function Header() {
                       {route.label}
                     </Link>
                   ))}
+                  <button
+                    onClick={handleSignOut}
+                    className="flex items-center p-3 rounded-lg text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white"
+                  >
+                    <LogOut className="h-5 w-5 mr-3 text-red-500" />
+                    Sign Out
+                  </button>
                 </nav>
               </div>
             </SheetContent>
@@ -90,23 +123,32 @@ export function Header() {
           <Link href="/">
             <h1 className="text-2xl font-bold text-white">DriveHub</h1>
           </Link>
-          <nav className="flex items-center space-x-6">
-            {routes.map((route) => (
-              <Link
-                key={route.href}
-                href={route.href}
-                className={cn(
-                  "flex items-center text-sm font-medium transition-colors",
-                  pathname === route.href
-                    ? "text-[#ffd342]"
-                    : "text-gray-400 hover:text-white"
-                )}
-              >
-                <route.icon className={cn("h-5 w-5 mr-2", route.color)} />
-                {route.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-6">
+              {routes.map((route) => (
+                <Link
+                  key={route.href}
+                  href={route.href}
+                  className={cn(
+                    "flex items-center text-sm font-medium transition-colors",
+                    pathname === route.href
+                      ? "text-[#ffd342]"
+                      : "text-gray-400 hover:text-white"
+                  )}
+                >
+                  <route.icon className={cn("h-5 w-5 mr-2", route.color)} />
+                  {route.label}
+                </Link>
+              ))}
+            </nav>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center bg-[#ffd342] text-black font-medium py-2 px-4 rounded-full hover:bg-[#e6be2e] transition-colors shadow-md ml-10"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     </header>

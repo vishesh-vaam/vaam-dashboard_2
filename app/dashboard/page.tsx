@@ -79,15 +79,7 @@ export default function Home() {
 	}, [user,supabase]);
 
 	// Handle sign out
-	const handleSignOut = async () => {
-		try {
-			const { error } = await supabase.auth.signOut();
-			if (error) throw error;
-			router.push("/signin");
-		} catch (error) {
-			console.error("Error signing out:", error);
-		}
-	};
+	
 
 	// Loading state
 	if (loading) {
@@ -144,12 +136,7 @@ export default function Home() {
 							Here's an overview of your recent activity
 						</p>
 					</div>
-					<button
-						onClick={handleSignOut}
-						className="bg-[#ffd342] text-black font-medium py-2 px-6 rounded-full hover:bg-[#e6be2e] transition-colors shadow-md"
-					>
-						Sign Out
-					</button>
+					
 				</div>
 
 				{/* Stats Cards */}
