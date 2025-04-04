@@ -73,9 +73,7 @@ export function UserInfo() {
         </CardContent>
       </Card>
 
-      <div className="hidden md:block">
-        <ModeToggle />
-      </div>
+      
     </div>
   );
 }
