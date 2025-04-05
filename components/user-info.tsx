@@ -43,11 +43,17 @@ export function UserInfo() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Wallet className="h-4 w-4 text-[#ffd342]" />
-              <span className="text-sm text-black dark:text-white">Earnings</span>
+              <span className="text-sm text-black dark:text-white">
+                Earnings
+              </span>
             </div>
             <div className="text-right">
-              <p className="text-sm font-semibold text-black dark:text-white">$2,458.00</p>
-              <p className="text-xs text-gray-600 dark:text-gray-300">+20.1% last mo.</p>
+              <p className="text-sm font-semibold text-black dark:text-white">
+                $2,458.00
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">
+                +20.1% last mo.
+              </p>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -56,8 +62,12 @@ export function UserInfo() {
               <span className="text-sm text-black dark:text-white">Trips</span>
             </div>
             <div className="text-right">
-              <p className="text-sm font-semibold text-black dark:text-white">142 Total</p>
-              <p className="text-xs text-gray-600 dark:text-gray-300">18 this mo.</p>
+              <p className="text-sm font-semibold text-black dark:text-white">
+                142 Total
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">
+                18 this mo.
+              </p>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -66,14 +76,16 @@ export function UserInfo() {
               <span className="text-sm text-black dark:text-white">Rating</span>
             </div>
             <div className="text-right">
-              <p className="text-sm font-semibold text-black dark:text-white">4.8</p>
-              <p className="text-xs text-gray-600 dark:text-gray-300">95 reviews</p>
+              <p className="text-sm font-semibold text-black dark:text-white">
+                4.8
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">
+                95 reviews
+              </p>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      
     </div>
   );
 }
