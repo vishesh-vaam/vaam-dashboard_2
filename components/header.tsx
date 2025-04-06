@@ -184,7 +184,6 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useState } from "react";
 import { useSupabase } from "@/lib/supabase-client";
 import { ModeToggle } from "./global/ModeToggle";
-import { NavbarUserProfile } from "./NavbarUserProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Car, Star } from "lucide-react";
