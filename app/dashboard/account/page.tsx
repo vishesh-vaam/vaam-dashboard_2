@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 interface Profile {
   first_name: string;
@@ -20,7 +22,7 @@ interface Profile {
   insurance_file_url: string;
 }
 
-export default function AccountPage() {
+function AccountContent() {
   const session = useSession();
   const { supabase } = useSupabase();
   const [profile, setProfile] = useState<Profile>({
@@ -37,6 +39,8 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState<Profile>(profile);
+  const searchParams = useSearchParams();
+  const editMode = searchParams.get("edit") === "true";
 
   useEffect(() => {
     if (!session?.user) return;
@@ -57,7 +61,8 @@ export default function AccountPage() {
     };
 
     fetchProfile();
-  }, [session, supabase]);
+    setEditing(editMode); // Set editing mode based on URL parameter
+  }, [session, supabase, editMode]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -101,7 +106,7 @@ export default function AccountPage() {
     <div className="min-h-screen p-6">
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
-          <h2 className="text-3xl font-bold text-black dark:text-white">My Account</h2>
+          <h2 className="text-3xl font-bold text-black dark:text-white">My Profile</h2>
           <p className="text-gray-600 dark:text-gray-300">Manage your personal and vehicle information</p>
         </div>
 
@@ -283,5 +288,13 @@ export default function AccountPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div className="text-center text-gray-600 dark:text-gray-300">Loading...</div>}>
+      <AccountContent />
+    </Suspense>
   );
 }
