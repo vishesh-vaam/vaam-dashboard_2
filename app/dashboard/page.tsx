@@ -193,7 +193,7 @@ export default function Home() {
 
 				{/* Recent Rides */}
 
-				<Card className="bg-white dark:bg-black border  rounded-xl shadow-lg">
+				<Card className=" border  rounded-xl shadow-lg">
 					<CardHeader>
 						<CardTitle className=" flex justify-center text-2xl font-semibold text-black dark:text-white">
 							Recent Rides

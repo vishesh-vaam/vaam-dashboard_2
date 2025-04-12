@@ -26,7 +26,7 @@ export default function WithdrawPage() {
     }
     // Add withdrawal logic here (e.g., API call)
     console.log(`Withdrawing £${withdrawAmount}`);
-    router.push("/dashboard/subscription"); // Redirect back after success
+    router.push("/dashboard/earnings"); // Redirect back after success
   };
 
   return (
