@@ -110,7 +110,7 @@ export default function SubscriptionPage() {
           </div>
 
           <button
-            onClick={() => router.push("/dashboard/payment-method")}
+            onClick={() => router.push("#")}
             className="w-full bg-[#ffd342] text-black py-3 rounded-xl font-semibold hover:bg-[#e6bd3b] transition-colors"
           >
             Renew Subscription

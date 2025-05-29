@@ -88,23 +88,27 @@ export function Header() {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setDropdownOpen(false);
+    }
+  };
 
+  if (dropdownOpen) {
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  }
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [dropdownOpen]);
+
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-black text-white z-50 border-b border-gray-800">
+    <header className="fixed top-0 left-0 right-0 bg-[#141414] text-white z-50 border-b border-gray-800">
       <div className="container mx-auto px-4">
         {/* Mobile Header (below md breakpoint) */}
         <div className="flex items-center justify-between h-16 md:hidden">
@@ -114,7 +118,10 @@ export function Header() {
           <div className="flex items-center gap-2">
             <div className="relative" ref={dropdownRef}>
               <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+                onClick={(e) => {
+                    e.stopPropagation(); // Prevent event from reaching the document click listener
+                    setDropdownOpen((prev) => !prev);
+                }}
                 className="outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffd342] rounded-full"
               >
                 <Avatar className="h-8 w-8 cursor-pointer transition-all hover:ring-2 hover:ring-[#ffd342]">
@@ -125,16 +132,16 @@ export function Header() {
                 </Avatar>
               </button>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-black border-2 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4">
+                <div className="absolute mt-2 left-1/2 -translate-x-1/2 w-[90vw] max-w-sm sm:left-auto sm:right-0 sm:translate-x-0 sm:w-80 bg-white dark:bg-black border-2 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 z-50" style={{ marginLeft: "-60px" }}>
                   <Card className="border-none bg-white dark:bg-black">
-                    <CardContent className="flex items-center space-x-4 pt-4 pb-4">
+                    <CardContent className="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-4 pt-4 pb-4">
                       <Avatar className="h-16 w-16">
                         <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60" />
                         <AvatarFallback className="bg-gray-700 text-white">
                           {user?.email ? user.email[0].toUpperCase() : "DU"}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="min-w-0">
+                      <div className="min-w-0 text-center">
                         <h2 className="text-xl font-bold text-black dark:text-white truncate">
                           {displayName}
                         </h2>
@@ -290,29 +297,30 @@ export function Header() {
         </div>
 
         {/* Desktop Header (md and above) */}
-        <div className="hidden md:flex items-center justify-between h-16">
-          <Link href="/">
-            <h1 className="text-2xl font-bold text-white">Vaam</h1>
-          </Link>
-          <div className="flex items-center gap-8">
-            <nav className="flex items-center gap-6">
-              {routes.map((route) => (
-                <Link
-                  key={route.href}
-                  href={route.href}
-                  className={cn(
-                    "flex items-center text-sm font-medium transition-colors",
-                    pathname === route.href
-                      ? "text-[#ffd342]"
-                      : "text-gray-400 hover:text-white"
-                  )}
-                >
-                  {/* <route.icon className={cn("h-5 w-5 mr-2", route.color)} /> */}
-                  {route.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="flex items-center gap-4">
+        <div className="hidden md:flex items-center h-16">
+        {/* Left: Logo */}
+        <Link href="/">
+          <h1 className="text-2xl font-bold text-white">Vaam</h1>
+        </Link>
+
+         {/* Center: Nav */}
+          <nav className="flex-1 flex justify-center space-x-6">
+          {routes.map((route) => (
+        <Link
+          key={route.href}
+          href={route.href}
+          className={cn(
+          "text-sm font-medium transition-colors",
+          pathname === route.href
+          ? "text-[#ffd342]"
+          : "text-gray-400 hover:text-white"
+         )}
+         >
+          {route.label}
+        </Link>
+        ))}
+        </nav>
+        <div className="flex items-center gap-4">
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -445,8 +453,7 @@ export function Header() {
                   </div>
                 )}
               </div>
-              <ModeToggle />
-            </div>
+            <ModeToggle />
           </div>
         </div>
       </div>

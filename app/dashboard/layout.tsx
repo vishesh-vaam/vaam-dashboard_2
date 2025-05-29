@@ -3,6 +3,7 @@
 import "../globals.css";
 import { ThemeProvider } from "next-themes";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { UserInfo } from "@/components/user-info";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
@@ -53,6 +54,7 @@ export default function DashboardLayout({
           <div className="min-h-screen flex flex-col">
             {/* Header */}
             <Header />
+
             {/* Main content area */}
             <div className="flex-1">
               <div className="flex min-h-[calc(100vh-4rem)]">
@@ -63,6 +65,9 @@ export default function DashboardLayout({
                 </div>
               </div>
             </div>
+
+            {/* Footer */}
+            <Footer />
           </div>
         </ThemeProvider>
       </SessionContextProvider>
