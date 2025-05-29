@@ -4,7 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Car, Star, Wallet } from "lucide-react";
 import { ModeToggle } from "./global/ModeToggle";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useSession, useUser } from "@supabase/auth-helpers-react";
+import { useSupabase } from "@/lib/supabase-client";
 
 export function UserInfo() {
   const user = useUser();
@@ -14,6 +15,15 @@ export function UserInfo() {
     return <p>Loading...</p>;
   }
 
+  const session = useSession();
+  const {supabase} = useSupabase();
+
+  const name =
+    user?.user_metadata?.first_name ||
+    user?.user_metadata?.name?.split(" ")[0] ||
+    (user?.email ? user.email.split("@")[0] : "Driver");
+  const displayName = name;
+
   return (
     <div className="space-y-4">
       <Card className="border-none shadow-md bg-white dark:bg-black">
@@ -21,12 +31,12 @@ export function UserInfo() {
           <Avatar className="h-16 w-16">
             <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60" />
             <AvatarFallback className="bg-gray-200 dark:bg-gray-700 text-black dark:text-white">
-              {user.email ? user.email[0].toUpperCase() : "DU"}
+              {displayName}
             </AvatarFallback>
           </Avatar>
           <div className="truncate">
             <h2 className="text-xl font-bold text-black dark:text-white truncate">
-              {user.email ? user.email.split("@")[0] : "Driver"}
+              {displayName}
             </h2>
             <p className="text-gray-600 dark:text-gray-300">Premium Driver</p>
           </div>
