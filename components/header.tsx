@@ -22,6 +22,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Car, Star, Wallet as WalletIcon } from "lucide-react";
 import { useSession, useUser } from "@supabase/auth-helpers-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import logo from "@/public/logo.png";
+import logo_dark from "@/public/logo_dark.png";
 
 const routes = [
   {
@@ -57,6 +61,11 @@ const routes = [
 ];
 
 export function Header() {
+
+  const { resolvedTheme } = useTheme();  
+  // resolvedTheme will be "light" or "dark"
+  const logoSrc = resolvedTheme === "dark" ? logo_dark : logo;
+
   const pathname = usePathname();
   const { supabase } = useSupabase();
   const [isOpen, setIsOpen] = useState(false);
@@ -113,7 +122,13 @@ export function Header() {
         {/* Mobile Header (below md breakpoint) */}
         <div className="flex items-center justify-between h-16 md:hidden">
           <Link href="/" onClick={() => setIsOpen(false)}>
-            <h1 className="text-2xl font-bold text-white">Vaam</h1>
+            <Image
+              src={logoSrc}
+              alt="Vaam Logo"
+              width={70}
+              height={70}
+              className="rounded-full"
+            />
           </Link>
           <div className="flex items-center gap-2">
             <div className="relative" ref={dropdownRef}>
@@ -300,7 +315,13 @@ export function Header() {
         <div className="hidden md:flex items-center h-16">
         {/* Left: Logo */}
         <Link href="/">
-          <h1 className="text-2xl font-bold text-white">Vaam</h1>
+          <Image
+            src={logoSrc}
+            alt="Vaam Logo"
+            width={70}
+            height={70}
+            className="rounded-full"
+          />
         </Link>
 
          {/* Center: Nav */}
