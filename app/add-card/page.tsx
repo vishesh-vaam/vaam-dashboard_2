@@ -37,7 +37,7 @@ export default function AddCardPage() {
         <div className="bg-primary/10 p-3 rounded-full">
           <CreditCard className="text-primary" size={24} />
         </div>
-        <h1 className="text-2xl font-bold">Add New Card</h1>
+        <h1 className="text-2xl font-bold">Add New Card Details</h1>
       </div>
 
       <form className="space-y-6">
