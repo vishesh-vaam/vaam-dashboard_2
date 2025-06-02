@@ -73,15 +73,6 @@ export function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Use the custom hook to get consistent user profile information
-  const { displayName } = useUserProfile();
-
-  // Client-side only rendering to prevent hydration errors
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const handleSignOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -363,7 +354,7 @@ export function Header() {
                   </AvatarFallback>
                 </Avatar>
               </button>
-              {isClient && dropdownOpen && (
+              {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-black border-2 border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4">
                   <Card className="border-none bg-white dark:bg-black">
                     <CardContent className="flex items-center space-x-4 pt-4 pb-4">
